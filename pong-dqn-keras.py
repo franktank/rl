@@ -98,10 +98,12 @@ class DQN:
         for state, action, reward, next_state, done in minibatch:
             target = reward
             if not done:
+                # just bellman equation
                 target = (reward + self.gamma *
                           np.amax(self.model.predict(next_state)[0])) # important step
             target_f = self.model.predict(state) # important step
             target_f[0][action] = target
+            # like value iteration
             self.model.fit(state, target_f, epochs=1, verbose=0) # important step
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
